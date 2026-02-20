@@ -1,0 +1,82 @@
+===============================================================================
+TRADE ORDERS DATA PROCESSING PIPELINE - RUNBOOK
+===============================================================================
+
+STEP 1: DATA PROFILING
+-----------------------
+Description: Profile raw data, detect schema, statistics, PII, and ETL needs
+Input: s3://tanmayrawtest101/fin_work/datasets/trade_orders_data/trade_orders.json
+Output: s3://tanmayrawtest101/fin_work/process_data/trade_orders/profiling_output/report.json
+
+Command:
+cd /home/tanmay-axcess/Desktop/my/Data_Processing/trade_orders_processing/Src && python3 data_profiling.py s3://tanmayrawtest101/fin_work/datasets/trade_orders_data/trade_orders.json s3://tanmayrawtest101/fin_work/process_data/trade_orders/profiling_output/report.json
+
+
+STEP 2: DEDUPLICATION
+----------------------
+Description: Remove duplicate records based on profiling report
+Input: s3://tanmayrawtest101/fin_work/datasets/trade_orders_data/trade_orders.json
+Profile: s3://tanmayrawtest101/fin_work/process_data/trade_orders/profiling_output/report.json
+Output: s3://tanmayrawtest101/fin_work/process_data/trade_orders/dedup_output/deduplicated_data.json
+
+Command:
+cd /home/tanmay-axcess/Desktop/my/Data_Processing/trade_orders_processing/Src && python deduplication.py s3://tanmayrawtest101/fin_work/process_data/trade_orders/profiling_output/report.json s3://tanmayrawtest101/fin_work/datasets/trade_orders_data/trade_orders.json s3://tanmayrawtest101/fin_work/process_data/trade_orders/dedup_output /home/tanmay-axcess/Desktop/my/Data_Processing/trade_orders_processing/outputs
+
+
+STEP 3: PII MASKING
+--------------------
+Description: Mask PII columns with half masking (first half visible, second half masked)
+Input: s3://tanmayrawtest101/fin_work/process_data/trade_orders/dedup_output/deduplicated_data.json
+Profile: s3://tanmayrawtest101/fin_work/process_data/trade_orders/profiling_output/report.json
+Output: s3://tanmayrawtest101/fin_work/process_data/trade_orders/pii_masked_output/pii_masked_data.json
+
+Command:
+cd /home/tanmay-axcess/Desktop/my/Data_Processing/trade_orders_processing/Src && python pii_masking.py s3://tanmayrawtest101/fin_work/process_data/trade_orders/profiling_output/report.json s3://tanmayrawtest101/fin_work/process_data/trade_orders/dedup_output/deduplicated_data.json s3://tanmayrawtest101/fin_work/process_data/trade_orders/pii_masked_output /home/tanmay-axcess/Desktop/my/Data_Processing/trade_orders_processing/outputs
+
+
+STEP 4: ETL PROCESSING
+-----------------------
+Description: Clean (missing values, outliers, types) and Transform (normalize, bin, derive)
+Input: s3://tanmayrawtest101/fin_work/process_data/trade_orders/pii_masked_output/pii_masked_data.json
+Profile: s3://tanmayrawtest101/fin_work/process_data/trade_orders/profiling_output/report.json
+Output: s3://tanmayrawtest101/fin_work/process_data/trade_orders/etl_output/etl_processed_data.json
+
+Command:
+cd /home/tanmay-axcess/Desktop/my/Data_Processing/trade_orders_processing/Src && python etl_processing.py s3://tanmayrawtest101/fin_work/process_data/trade_orders/profiling_output/report.json s3://tanmayrawtest101/fin_work/process_data/trade_orders/pii_masked_output/pii_masked_data.json s3://tanmayrawtest101/fin_work/process_data/trade_orders/etl_output /home/tanmay-axcess/Desktop/my/Data_Processing/trade_orders_processing/outputs
+
+
+STEP 5: QUALITY CHECK
+----------------------
+Description: Validate data quality with advanced checks (completeness, types, business rules, outliers, integrity, distribution)
+Input: s3://tanmayrawtest101/fin_work/process_data/trade_orders/etl_output/etl_processed_data.json
+Output: s3://tanmayrawtest101/fin_work/process_data/trade_orders/quality_check_output/quality_check_report.json
+
+Command:
+cd /home/tanmay-axcess/Desktop/my/Data_Processing/trade_orders_processing/Src && python quality_check.py s3://tanmayrawtest101/fin_work/process_data/trade_orders/etl_output/etl_processed_data.json s3://tanmayrawtest101/fin_work/process_data/trade_orders/quality_check_output /home/tanmay-axcess/Desktop/my/Data_Processing/trade_orders_processing/outputs
+
+
+===============================================================================
+LOCAL OUTPUT DIRECTORY
+===============================================================================
+All outputs are also saved locally at:
+/home/tanmay-axcess/Desktop/my/Data_Processing/trade_orders_processing/outputs/
+
+Files:
+- report.json (profiling report)
+- deduplicated_data.json
+- pii_masked_data.json
+- etl_processed_data.json
+- quality_check_report.json
+
+
+===============================================================================
+PIPELINE SUMMARY
+===============================================================================
+1. DATA_PROFILING    → Analyze raw data
+2. DEDUPLICATION     → Remove duplicates
+3. PII_MASKING       → Mask sensitive data
+4. ETL_PROCESSING    → Clean and transform
+5. QUALITY_CHECK     → Validate final data
+
+Total Steps: 5
+Processing: 874 trade order records

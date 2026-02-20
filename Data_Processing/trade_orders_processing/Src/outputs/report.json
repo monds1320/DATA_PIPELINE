@@ -1,0 +1,199 @@
+{
+  "profileId": "Tradeorders_Profile_001",
+  "timestamp": "2026-02-21T01:59:32.299260",
+  "source": {
+    "path": "s3://tanmayrawtest101/fin_work/datasets/trade_orders_data/trade_orders.json",
+    "format": "json"
+  },
+  "dataProfile": {
+    "rowCount": 874,
+    "columnCount": 15,
+    "columns": [
+      "order_id",
+      "symbol",
+      "timestamp",
+      "order_type",
+      "side",
+      "quantity",
+      "order_price",
+      "execution_price",
+      "executed_quantity",
+      "order_status",
+      "exchange",
+      "order_time",
+      "execution_time",
+      "trader_id",
+      "volume"
+    ],
+    "schema": {
+      "order_id": "StringType()",
+      "symbol": "StringType()",
+      "timestamp": "StringType()",
+      "order_type": "StringType()",
+      "side": "StringType()",
+      "quantity": "IntegerType()",
+      "order_price": "DoubleType()",
+      "execution_price": "DoubleType()",
+      "executed_quantity": "IntegerType()",
+      "order_status": "StringType()",
+      "exchange": "StringType()",
+      "order_time": "StringType()",
+      "execution_time": "StringType()",
+      "trader_id": "StringType()",
+      "volume": "IntegerType()"
+    },
+    "nullCounts": {
+      "order_id": 0,
+      "symbol": 0,
+      "timestamp": 0,
+      "order_type": 0,
+      "side": 0,
+      "quantity": 0,
+      "order_price": 0,
+      "execution_price": 0,
+      "executed_quantity": 0,
+      "order_status": 0,
+      "exchange": 0,
+      "order_time": 0,
+      "execution_time": 0,
+      "trader_id": 0,
+      "volume": 0
+    },
+    "duplicateCount": 0,
+    "piiColumns": [
+      "order_id",
+      "side",
+      "trader_id"
+    ],
+    "numericStats": {
+      "order_id": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "symbol": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "timestamp": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "order_type": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "side": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "quantity": {
+        "min": "1",
+        "max": "1000",
+        "avg": "493.82608695652175",
+        "stddev": "296.0186646915805"
+      },
+      "order_price": {
+        "min": "208.63",
+        "max": "2702.0",
+        "avg": "1317.642093821512",
+        "stddev": "810.3510526951867"
+      },
+      "execution_price": {
+        "min": "208.61",
+        "max": "2702.37",
+        "avg": "1317.6571624713954",
+        "stddev": "810.341218819318"
+      },
+      "executed_quantity": {
+        "min": "2",
+        "max": "1000",
+        "avg": "498.4382151029748",
+        "stddev": "287.44666436644445"
+      },
+      "order_status": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "exchange": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "order_time": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "execution_time": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "trader_id": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "volume": {
+        "min": "0",
+        "max": "310804",
+        "avg": "25824.097254004577",
+        "stddev": "33776.55891946659"
+      }
+    }
+  },
+  "recommendations": [
+    {
+      "priority": 1,
+      "process": "DATA_PROFILING",
+      "reason": "Completed - See detailed metrics above",
+      "required": true
+    },
+    {
+      "priority": 2,
+      "process": "DEDUPLICATION",
+      "reason": "Found 0 duplicate records",
+      "required": false
+    },
+    {
+      "priority": 3,
+      "process": "ETL_TRANSFORM",
+      "reason": "Transform required: filter 19 outliers, aggregate metrics by key dimensions, create derived time-based columns",
+      "required": true
+    },
+    {
+      "priority": 4,
+      "process": "PII_MASKING",
+      "reason": "Found 3 PII columns: ['order_id', 'side', 'trader_id']",
+      "required": true
+    },
+    {
+      "priority": 5,
+      "process": "QUALITY_CHECK",
+      "reason": "Validate data quality and business rules",
+      "required": true
+    },
+    {
+      "priority": 6,
+      "process": "FINAL_PROCESSING",
+      "reason": "Store processed data in partitioned format",
+      "required": true
+    }
+  ]
+}

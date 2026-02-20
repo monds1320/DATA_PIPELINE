@@ -1,0 +1,15 @@
+{
+  "originalQualityScore": "62.5%",
+  "totalRecords": 874,
+  "fixesApplied": 7,
+  "fixes": [
+    "Converted 'executed_quantity' to IntegerType",
+    "Converted 'execution_price' to DoubleType",
+    "Converted 'order_price' to DoubleType",
+    "Converted 'quantity' to IntegerType",
+    "Converted 'volume' to IntegerType",
+    "Capped outliers in 'volume' at \u00b13\u03c3 (mean=25824.10, std=33795.90)",
+    "Fixed executed_quantity to not exceed quantity"
+  ],
+  "status": "COMPLETED"
+}

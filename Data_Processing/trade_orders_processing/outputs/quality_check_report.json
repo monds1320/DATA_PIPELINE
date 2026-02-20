@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-02-21T02:43:17.944874",
+  "totalRecords": 874,
+  "qualityScore": "75.0%",
+  "checksPerformed": 8,
+  "checksPassed": 6,
+  "checksFailed": 2,
+  "checks": {
+    "Completeness": {
+      "status": "PASS",
+      "issues": []
+    },
+    "Data Types": {
+      "status": "FAIL",
+      "issues": [
+        "Column 'executed_quantity': Expected numeric, got LongType()",
+        "Column 'execution_price': Expected numeric, got DoubleType()",
+        "Column 'order_price': Expected numeric, got DoubleType()",
+        "Column 'quantity': Expected numeric, got LongType()",
+        "Column 'volume': Expected numeric, got DoubleType()"
+      ]
+    },
+    "Business Rules": {
+      "status": "PASS",
+      "issues": []
+    },
+    "Duplicates": {
+      "status": "PASS",
+      "issues": []
+    },
+    "Consistency": {
+      "status": "PASS",
+      "issues": []
+    },
+    "Statistical Outliers": {
+      "status": "FAIL",
+      "issues": [
+        "Column 'volume': 26 statistical outliers (Z-score > 3)"
+      ]
+    },
+    "Referential Integrity": {
+      "status": "PASS",
+      "issues": []
+    },
+    "Data Distribution": {
+      "status": "PASS",
+      "issues": []
+    }
+  }
+}
