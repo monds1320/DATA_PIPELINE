@@ -1,0 +1,13 @@
+{
+  "accounts": {
+    "total": 5000,
+    "active": 2981,
+    "total_balance": 2521415365.61,
+    "avg_balance": 504283.07312200003
+  },
+  "ledger": {
+    "total_entries": 30183,
+    "total_debits": 378582435.40000004,
+    "total_credits": 376490147.35
+  }
+}
