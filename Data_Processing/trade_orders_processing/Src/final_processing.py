@@ -20,6 +20,21 @@ def write_json_to_s3(s3_path, data):
     key = '/'.join(s3_path.split('/')[3:])
     s3.put_object(Bucket=bucket, Key=key, Body=json.dumps(data, indent=2))
 
+def upload_parquet_to_s3(local_parquet_path, s3_path):
+    """Upload only Parquet files to S3, skip CRC files"""
+    import os
+    bucket = s3_path.split('/')[2]
+    key_prefix = '/'.join(s3_path.split('/')[3:])
+    
+    for root, dirs, files in os.walk(local_parquet_path):
+        for file in files:
+            # Only upload .parquet files and _SUCCESS, skip .crc files
+            if file.endswith('.parquet') or file == '_SUCCESS':
+                local_file = os.path.join(root, file)
+                relative_path = os.path.relpath(local_file, local_parquet_path)
+                s3_key = f"{key_prefix}/{relative_path}"
+                s3.upload_file(local_file, bucket, s3_key)
+
 def write_json_to_local(local_path, data):
     Path(local_path).parent.mkdir(parents=True, exist_ok=True)
     with open(local_path, 'w') as f:
@@ -125,8 +140,7 @@ def run_final_processing(quality_report_path, input_data_path, s3_output_path, l
         df, fixes = fix_referential_integrity(df, issues)
         all_fixes.extend(fixes)
     
-    final_data = [row.asDict() for row in df.collect()]
-    final_count = len(final_data)
+    final_count = df.count()
     
     # Create processing report
     processing_report = {
@@ -137,15 +151,16 @@ def run_final_processing(quality_report_path, input_data_path, s3_output_path, l
         'status': 'COMPLETED'
     }
     
-    # Save final data to S3
-    data_s3 = s3_output_path.rstrip('/') + '/final_processed_data.json'
-    print(f"\nWriting final data to {data_s3}...")
-    write_json_to_s3(data_s3, final_data)
+    # Save final data locally in Parquet format as single file
+    data_local = str(Path(local_output_dir) / "final_processed_data.parquet")
+    print(f"\nWriting final data to {data_local}...")
+    Path(local_output_dir).mkdir(parents=True, exist_ok=True)
+    df.coalesce(1).write.mode('overwrite').parquet(data_local)
     
-    # Save final data locally
-    data_local = Path(local_output_dir) / "final_processed_data.json"
-    print(f"Writing final data to {data_local}...")
-    write_json_to_local(data_local, final_data)
+    # Upload Parquet to S3
+    data_s3 = s3_output_path.rstrip('/') + '/final_processed_data.parquet'
+    print(f"Uploading final data to {data_s3}...")
+    upload_parquet_to_s3(data_local, data_s3)
     
     # Save processing report to S3
     report_s3 = s3_output_path.rstrip('/') + '/final_processing_report.json'

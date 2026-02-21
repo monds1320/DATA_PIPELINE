@@ -10,11 +10,28 @@ import numpy as np
 s3 = boto3.client('s3')
 spark = SparkSession.builder.appName("QualityCheck").getOrCreate()
 
-def read_json_from_s3(s3_path):
-    bucket = s3_path.split('/')[2]
-    key = '/'.join(s3_path.split('/')[3:])
-    obj = s3.get_object(Bucket=bucket, Key=key)
-    return json.loads(obj['Body'].read().decode('utf-8'))
+def read_data_from_path(data_path):
+    """Read data from local or S3 path - supports both JSON and Parquet"""
+    if data_path.startswith('s3://'):
+        if data_path.endswith('.json'):
+            bucket = data_path.split('/')[2]
+            key = '/'.join(data_path.split('/')[3:])
+            obj = s3.get_object(Bucket=bucket, Key=key)
+            data = json.loads(obj['Body'].read().decode('utf-8'))
+            return spark.createDataFrame(data)
+        else:
+            # For S3 Parquet, download and read locally due to S3 filesystem issues
+            raise ValueError("S3 Parquet not supported. Use local Parquet file.")
+    else:
+        # Local file
+        if data_path.endswith('.json'):
+            with open(data_path, 'r') as f:
+                data = json.load(f)
+            return spark.createDataFrame(data)
+        elif data_path.endswith('.parquet') or 'parquet' in data_path:
+            return spark.read.parquet(data_path)
+        else:
+            raise ValueError(f"Unsupported file format: {data_path}")
 
 def write_json_to_s3(s3_path, data):
     bucket = s3_path.split('/')[2]
@@ -136,8 +153,7 @@ def check_data_distribution(df):
 
 def run_quality_check(input_data_path, s3_output_path, local_output_dir):
     print(f"Reading data from {input_data_path}...")
-    data = read_json_from_s3(input_data_path)
-    df = spark.createDataFrame(data)
+    df = read_data_from_path(input_data_path)
     
     total_records = df.count()
     print(f"Total records: {total_records}")

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-21T02:43:17.944874",
+  "timestamp": "2026-02-21T10:43:54.158642",
   "totalRecords": 874,
   "qualityScore": "75.0%",
   "checksPerformed": 8,
@@ -13,10 +13,10 @@
     "Data Types": {
       "status": "FAIL",
       "issues": [
-        "Column 'executed_quantity': Expected numeric, got LongType()",
+        "Column 'executed_quantity': Expected numeric, got IntegerType()",
         "Column 'execution_price': Expected numeric, got DoubleType()",
         "Column 'order_price': Expected numeric, got DoubleType()",
-        "Column 'quantity': Expected numeric, got LongType()",
+        "Column 'quantity': Expected numeric, got IntegerType()",
         "Column 'volume': Expected numeric, got DoubleType()"
       ]
     },
