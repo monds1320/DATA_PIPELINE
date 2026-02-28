@@ -1,0 +1,86 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:DeleteObject",
+                "s3:ListBucket",
+                "s3:GetBucketLocation",
+                "s3:GetLifecycleConfiguration",
+                "s3:PutLifecycleConfiguration"
+            ],
+            "Resource": [
+                "arn:aws:s3:::*/*",
+                "arn:aws:s3:::*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "sts:AssumeRole"
+            ],
+            "Resource": [
+                "arn:aws:iam::361769565206:role/databricks-s3-ingest-c7a66-db_s3_iam"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:GetBucketNotification",
+                "s3:PutBucketNotification",
+                "sns:ListSubscriptionsByTopic",
+                "sns:GetTopicAttributes",
+                "sns:SetTopicAttributes",
+                "sns:CreateTopic",
+                "sns:TagResource",
+                "sns:Publish",
+                "sns:Subscribe",
+                "sqs:CreateQueue",
+                "sqs:DeleteMessage",
+                "sqs:ReceiveMessage",
+                "sqs:SendMessage",
+                "sqs:GetQueueUrl",
+                "sqs:GetQueueAttributes",
+                "sqs:SetQueueAttributes",
+                "sqs:TagQueue",
+                "sqs:ChangeMessageVisibility",
+                "sqs:PurgeQueue"
+            ],
+            "Resource": [
+                "arn:aws:s3:::tanmayrawtest101",
+                "arn:aws:sqs:*:361769565206:csms-*",
+                "arn:aws:sns:*:361769565206:csms-*"
+            ],
+            "Effect": "Allow",
+            "Sid": "ManagedFileEventsSetupStatement"
+        },
+        {
+            "Action": [
+                "sqs:ListQueues",
+                "sqs:ListQueueTags",
+                "sns:ListTopics"
+            ],
+            "Resource": [
+                "arn:aws:sqs:*:361769565206:csms-*",
+                "arn:aws:sns:*:361769565206:csms-*"
+            ],
+            "Effect": "Allow",
+            "Sid": "ManagedFileEventsListStatement"
+        },
+        {
+            "Action": [
+                "sns:Unsubscribe",
+                "sns:DeleteTopic",
+                "sqs:DeleteQueue"
+            ],
+            "Resource": [
+                "arn:aws:sqs:*:361769565206:csms-*",
+                "arn:aws:sns:*:361769565206:csms-*"
+            ],
+            "Effect": "Allow",
+            "Sid": "ManagedFileEventsTeardownStatement"
+        }
+    ]
+}
