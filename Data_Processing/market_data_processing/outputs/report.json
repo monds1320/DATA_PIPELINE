@@ -1,0 +1,123 @@
+{
+  "profileId": "MarketData_Profile_001",
+  "timestamp": "2026-02-28T19:28:41.152310",
+  "source": {
+    "path": "s3://tanmayrawtest101/fin_work/datasets/market_data/stock_data.csv",
+    "format": "csv"
+  },
+  "dataProfile": {
+    "rowCount": 24655,
+    "columnCount": 7,
+    "columns": [
+      "symbol",
+      "date",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume"
+    ],
+    "schema": {
+      "symbol": "StringType()",
+      "date": "StringType()",
+      "open": "DoubleType()",
+      "high": "DoubleType()",
+      "low": "DoubleType()",
+      "close": "DoubleType()",
+      "volume": "IntegerType()"
+    },
+    "nullCounts": {
+      "symbol": 0,
+      "date": 0,
+      "open": 0,
+      "high": 0,
+      "low": 0,
+      "close": 0,
+      "volume": 0
+    },
+    "duplicateCount": 0,
+    "piiColumns": [],
+    "numericStats": {
+      "symbol": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "date": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "stddev": null
+      },
+      "open": {
+        "min": "22.646251678466797",
+        "max": "4576.0",
+        "avg": "682.941025246454",
+        "stddev": "837.2579786260184"
+      },
+      "high": {
+        "min": "23.056875228881836",
+        "max": "4592.25",
+        "avg": "689.8245465240138",
+        "stddev": "844.6589166447047"
+      },
+      "low": {
+        "min": "20.295000076293945",
+        "max": "4512.0",
+        "avg": "675.6552855373081",
+        "stddev": "829.4776542545067"
+      },
+      "close": {
+        "min": "22.60125160217285",
+        "max": "4553.75",
+        "avg": "682.6422792801773",
+        "stddev": "836.8853616986465"
+      },
+      "volume": {
+        "min": "0.0",
+        "max": "445342100.0",
+        "avg": "12324076.677509634",
+        "stddev": "13588237.010883635"
+      }
+    }
+  },
+  "recommendations": [
+    {
+      "priority": 1,
+      "process": "DATA_PROFILING",
+      "reason": "Completed - See detailed metrics above",
+      "required": true
+    },
+    {
+      "priority": 2,
+      "process": "DEDUPLICATION",
+      "reason": "Found 0 duplicate records",
+      "required": false
+    },
+    {
+      "priority": 3,
+      "process": "ETL_TRANSFORM",
+      "reason": "Transform required: clean data, create derived columns, and aggregate metrics",
+      "required": true
+    },
+    {
+      "priority": 4,
+      "process": "PII_MASKING",
+      "reason": "No PII detected - masking step will be skipped",
+      "required": false
+    },
+    {
+      "priority": 5,
+      "process": "QUALITY_CHECK",
+      "reason": "Validate data quality and business rules",
+      "required": true
+    },
+    {
+      "priority": 6,
+      "process": "FINAL_PROCESSING",
+      "reason": "Store processed data in partitioned format",
+      "required": true
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-02-28T19:34:09.854175",
+  "totalRecords": 24655,
+  "qualityScore": "42.9%",
+  "checksPerformed": 7,
+  "checksPassed": 3,
+  "checksFailed": 4,
+  "checks": {
+    "Completeness": {
+      "status": "FAIL",
+      "issues": [
+        "Column 'volume': 35 nulls (0.1%)",
+        "Column 'daily_return': 72 nulls (0.3%)",
+        "Column 'intraday_range': 35 nulls (0.1%)",
+        "Column 'price_change': 84 nulls (0.3%)",
+        "Column 'price_change_pct': 80 nulls (0.3%)"
+      ]
+    },
+    "Data Types": {
+      "status": "FAIL",
+      "issues": [
+        "Invalid numeric value in 'date': 2006-02-27"
+      ]
+    },
+    "Business Rules": {
+      "status": "FAIL",
+      "issues": [
+        "Row 0: Negative price_change price: -0.33",
+        "Row 0: Negative price_change_pct price: -0.4125",
+        "Row 6: Negative price_change price: -0.09",
+        "Row 6: Negative price_change_pct price: -0.1091",
+        "Row 7: Negative price_change price: -1.5"
+      ]
+    },
+    "Duplicates": {
+      "status": "PASS",
+      "issues": []
+    },
+    "Consistency": {
+      "status": "PASS",
+      "issues": []
+    },
+    "Statistical Outliers": {
+      "status": "FAIL",
+      "issues": [
+        "Column 'open': 989 statistical outliers (Z-score > 3)",
+        "Column 'high': 984 statistical outliers (Z-score > 3)",
+        "Column 'low': 988 statistical outliers (Z-score > 3)",
+        "Column 'close': 987 statistical outliers (Z-score > 3)",
+        "Column 'volume': 423 statistical outliers (Z-score > 3)",
+        "Column 'daily_return': 380 statistical outliers (Z-score > 3)",
+        "Column 'intraday_range': 577 statistical outliers (Z-score > 3)",
+        "Column 'price_change': 582 statistical outliers (Z-score > 3)",
+        "Column 'price_change_pct': 384 statistical outliers (Z-score > 3)"
+      ]
+    },
+    "Data Distribution": {
+      "status": "PASS",
+      "issues": []
+    }
+  }
+}

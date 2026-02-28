@@ -1,0 +1,194 @@
+MARKET DATA PROCESSING PIPELINE - RUNBOOK
+
+================================================================================
+CONFIGURATION
+================================================================================
+
+• S3_INPUT="s3://tanmayrawtest101/fin_work/datasets/market_data/"
+• S3_OUTPUT="s3://tanmayrawtest101/fin_work/process_data/market_data/"
+• LOCAL_OUTPUT="/home/tanmay-axcess/Desktop/my/Data_Processing/market_data_processing/outputs"
+• SCRIPT_DIR="/home/tanmay-axcess/Desktop/my/Data_Processing/market_data_processing/Src"
+
+================================================================================
+STAGE 1: DATA PROFILING
+================================================================================
+
+Purpose: Analyze CSV structure, detect schema, PII, and statistics
+
+Arguments:
+• arg1: S3 input CSV path
+• arg2: S3 output report path
+
+Command:
+• cd $SCRIPT_DIR
+• python3 data_profiling.py ${S3_INPUT}stock_data.csv ${S3_OUTPUT}profiling_output/report.json
+
+Output:
+• S3: s3://tanmayrawtest101/fin_work/process_data/market_data/profiling_output/report.json
+• Local: outputs/report.json
+
+================================================================================
+STAGE 2: DEDUPLICATION
+================================================================================
+
+Purpose: Remove duplicate records based on key columns
+
+Arguments:
+• arg1: S3 profiling report path
+• arg2: S3 raw data path
+• arg3: S3 output directory
+• arg4: Local output directory
+
+Command:
+• cd $SCRIPT_DIR
+• python3 deduplication.py ${S3_OUTPUT}profiling_output/report.json ${S3_INPUT}stock_data.csv ${S3_OUTPUT}dedup_output $LOCAL_OUTPUT
+
+Output:
+• S3: s3://tanmayrawtest101/fin_work/process_data/market_data/dedup_output/deduplicated_data.json
+• Local: outputs/deduplicated_data.json
+
+================================================================================
+STAGE 3: PII MASKING
+================================================================================
+
+Purpose: Mask sensitive columns with half-masking
+
+Arguments:
+• arg1: S3 profiling report path
+• arg2: S3 deduplicated data path
+• arg3: S3 output directory
+• arg4: Local output directory
+
+Command:
+• cd $SCRIPT_DIR
+• python3 pii_masking.py ${S3_OUTPUT}profiling_output/report.json ${S3_OUTPUT}dedup_output/deduplicated_data.json ${S3_OUTPUT}pii_masked_output $LOCAL_OUTPUT
+
+Output:
+• S3: s3://tanmayrawtest101/fin_work/process_data/market_data/pii_masked_output/pii_masked_data.json
+• Local: outputs/pii_masked_data.json
+
+================================================================================
+STAGE 4: ETL PROCESSING
+================================================================================
+
+Purpose: Clean data and create derived columns
+
+Arguments:
+• arg1: S3 profiling report path
+• arg2: S3 PII masked data path
+• arg3: S3 output directory
+• arg4: Local output directory
+
+Command:
+• cd $SCRIPT_DIR
+• python3 etl_processing.py ${S3_OUTPUT}profiling_output/report.json ${S3_OUTPUT}pii_masked_output/pii_masked_data.json ${S3_OUTPUT}etl_output $LOCAL_OUTPUT
+
+Output:
+• S3: s3://tanmayrawtest101/fin_work/process_data/market_data/etl_output/etl_processed_data.json
+• Local: outputs/etl_processed_data.json
+
+================================================================================
+STAGE 5: QUALITY CHECK
+================================================================================
+
+Purpose: Validate data quality with 7 checks
+
+Arguments:
+• arg1: S3 ETL processed data path
+• arg2: S3 output directory
+• arg3: Local output directory
+
+Command:
+• cd $SCRIPT_DIR
+• python3 quality_check.py ${S3_OUTPUT}etl_output/etl_processed_data.json ${S3_OUTPUT}quality_check_output $LOCAL_OUTPUT
+
+Output:
+• S3: s3://tanmayrawtest101/fin_work/process_data/market_data/quality_check_output/quality_check_report.json
+• Local: outputs/quality_check_report.json
+
+================================================================================
+STAGE 6: FINAL PROCESSING
+================================================================================
+
+Purpose: Fix quality issues and save as Parquet
+
+Arguments:
+• arg1: S3 quality report path
+• arg2: S3 ETL processed data path
+• arg3: S3 output directory
+• arg4: Local output directory
+
+Command:
+• cd $SCRIPT_DIR
+• python3 final_processing.py ${S3_OUTPUT}quality_check_output/quality_check_report.json ${S3_OUTPUT}etl_output/etl_processed_data.json ${S3_OUTPUT}final_output $LOCAL_OUTPUT
+
+Output:
+• S3: s3://tanmayrawtest101/fin_work/process_data/market_data/final_output/final_processed_data.parquet
+• S3: s3://tanmayrawtest101/fin_work/process_data/market_data/final_output/final_processed_data.json
+• S3: s3://tanmayrawtest101/fin_work/process_data/market_data/final_output/final_processing_report.json
+• Local: outputs/final_processed_data.parquet
+• Local: outputs/final_processed_data.json
+• Local: outputs/final_processing_report.json
+
+================================================================================
+RUN ALL STAGES
+================================================================================
+
+• cd $SCRIPT_DIR
+
+• echo "Stage 1: Data Profiling..."
+• python3 data_profiling.py ${S3_INPUT}stock_data.csv ${S3_OUTPUT}profiling_output/report.json
+
+• echo "Stage 2: Deduplication..."
+• python3 deduplication.py ${S3_OUTPUT}profiling_output/report.json ${S3_INPUT}stock_data.csv ${S3_OUTPUT}dedup_output $LOCAL_OUTPUT
+
+• echo "Stage 3: PII Masking..."
+• python3 pii_masking.py ${S3_OUTPUT}profiling_output/report.json ${S3_OUTPUT}dedup_output/deduplicated_data.json ${S3_OUTPUT}pii_masked_output $LOCAL_OUTPUT
+
+• echo "Stage 4: ETL Processing..."
+• python3 etl_processing.py ${S3_OUTPUT}profiling_output/report.json ${S3_OUTPUT}pii_masked_output/pii_masked_data.json ${S3_OUTPUT}etl_output $LOCAL_OUTPUT
+
+• echo "Stage 5: Quality Check..."
+• python3 quality_check.py ${S3_OUTPUT}etl_output/etl_processed_data.json ${S3_OUTPUT}quality_check_output $LOCAL_OUTPUT
+
+• echo "Stage 6: Final Processing..."
+• python3 final_processing.py ${S3_OUTPUT}quality_check_output/quality_check_report.json ${S3_OUTPUT}etl_output/etl_processed_data.json ${S3_OUTPUT}final_output $LOCAL_OUTPUT
+
+• echo "Pipeline completed!"
+
+================================================================================
+SCRIPT ARGUMENTS SUMMARY
+================================================================================
+
+data_profiling.py
+• Arg 1: S3 input CSV
+• Arg 2: S3 output report
+
+deduplication.py
+• Arg 1: S3 profile report
+• Arg 2: S3 raw data
+• Arg 3: S3 output dir
+• Arg 4: Local output dir
+
+pii_masking.py
+• Arg 1: S3 profile report
+• Arg 2: S3 dedup data
+• Arg 3: S3 output dir
+• Arg 4: Local output dir
+
+etl_processing.py
+• Arg 1: S3 profile report
+• Arg 2: S3 masked data
+• Arg 3: S3 output dir
+• Arg 4: Local output dir
+
+quality_check.py
+• Arg 1: S3 ETL data
+• Arg 2: S3 output dir
+• Arg 3: Local output dir
+
+final_processing.py
+• Arg 1: S3 quality report
+• Arg 2: S3 ETL data
+• Arg 3: S3 output dir
+• Arg 4: Local output dir

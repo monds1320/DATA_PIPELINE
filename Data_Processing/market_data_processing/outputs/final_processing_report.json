@@ -1,0 +1,31 @@
+{
+  "originalQualityScore": "42.9%",
+  "finalQualityScore": "100.0%",
+  "improvement": "57.1%",
+  "checksPerformed": 7,
+  "checksPassed": 7,
+  "checksFailed": 0,
+  "totalRecords": 24655,
+  "recordsRemoved": 0,
+  "fixesApplied": 17,
+  "fixes": [
+    "Adjusted close prices to be within high/low range",
+    "Separated 'daily_return' into positive (12686) and negative (11969) columns",
+    "Separated 'price_change' into positive (11897) and negative (12758) columns",
+    "Separated 'price_change_pct' into positive (11894) and negative (12761) columns",
+    "Removed original columns: daily_return, price_change, price_change_pct",
+    "Capped 989 outliers in 'open' at \u00b13\u03c3 (mean=682.94, std=837.27)",
+    "Capped 984 outliers in 'high' at \u00b13\u03c3 (mean=689.82, std=844.68)",
+    "Capped 988 outliers in 'low' at \u00b13\u03c3 (mean=675.66, std=829.49)",
+    "Capped 987 outliers in 'close' at \u00b13\u03c3 (mean=682.64, std=836.90)",
+    "Capped 423 outliers in 'volume' at \u00b13\u03c3 (mean=12324076.68, std=13588512.59)",
+    "Capped 577 outliers in 'intraday_range' at \u00b13\u03c3 (mean=14.17, std=18.38)",
+    "Capped 457 outliers in 'positive_value_daily_return' at \u00b13\u03c3 (mean=0.68, std=1.20)",
+    "Capped 476 outliers in 'neg_value_daily_return' at \u00b13\u03c3 (mean=0.62, std=1.12)",
+    "Capped 513 outliers in 'positive_value_price_change' at \u00b13\u03c3 (mean=3.33, std=9.05)",
+    "Capped 524 outliers in 'neg_value_price_change' at \u00b13\u03c3 (mean=3.63, std=9.18)",
+    "Capped 468 outliers in 'positive_value_price_change_pct' at \u00b13\u03c3 (mean=0.59, std=1.10)",
+    "Capped 467 outliers in 'neg_value_price_change_pct' at \u00b13\u03c3 (mean=0.63, std=1.06)"
+  ],
+  "status": "COMPLETED"
+}
