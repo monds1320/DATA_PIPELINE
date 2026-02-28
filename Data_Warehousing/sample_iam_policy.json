@@ -22,7 +22,7 @@
                 "sts:AssumeRole"
             ],
             "Resource": [
-                "arn:aws:iam::361769565206:role/databricks-s3-ingest-c7a66-db_s3_iam"
+                "arn:aws:iam::<YOUR_AWS_ACCOUNT_ID>:role/<YOUR_IAM_ROLE_NAME>"
             ],
             "Effect": "Allow"
         },
@@ -49,9 +49,9 @@
                 "sqs:PurgeQueue"
             ],
             "Resource": [
-                "arn:aws:s3:::tanmayrawtest101",
-                "arn:aws:sqs:*:361769565206:csms-*",
-                "arn:aws:sns:*:361769565206:csms-*"
+                "arn:aws:s3:::<YOUR_BUCKET_NAME>",
+                "arn:aws:sqs:*:<YOUR_AWS_ACCOUNT_ID>:csms-*",
+                "arn:aws:sns:*:<YOUR_AWS_ACCOUNT_ID>:csms-*"
             ],
             "Effect": "Allow",
             "Sid": "ManagedFileEventsSetupStatement"
@@ -63,8 +63,8 @@
                 "sns:ListTopics"
             ],
             "Resource": [
-                "arn:aws:sqs:*:361769565206:csms-*",
-                "arn:aws:sns:*:361769565206:csms-*"
+                "arn:aws:sqs:*:<YOUR_AWS_ACCOUNT_ID>:csms-*",
+                "arn:aws:sns:*:<YOUR_AWS_ACCOUNT_ID>:csms-*"
             ],
             "Effect": "Allow",
             "Sid": "ManagedFileEventsListStatement"
@@ -76,8 +76,8 @@
                 "sqs:DeleteQueue"
             ],
             "Resource": [
-                "arn:aws:sqs:*:361769565206:csms-*",
-                "arn:aws:sns:*:361769565206:csms-*"
+                "arn:aws:sqs:*:<YOUR_AWS_ACCOUNT_ID>:csms-*",
+                "arn:aws:sns:*:<YOUR_AWS_ACCOUNT_ID>:csms-*"
             ],
             "Effect": "Allow",
             "Sid": "ManagedFileEventsTeardownStatement"
